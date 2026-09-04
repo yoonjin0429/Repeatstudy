@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>간편 링크 학습 대시보드</title>
+    <title>나만의 학습 대시보드</title>
     <style>
         :root {
             --bg-color: #f1f5f9;
@@ -22,21 +22,22 @@
         body { background-color: var(--bg-color); color: var(--text-main); padding: 24px; line-height: 1.5; }
         .container { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 
+        /* Card Style */
         .card { background-color: var(--card-bg); border-radius: 14px; padding: 24px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         h1, h2, h3 { color: var(--text-main); }
-        
-        .user-bar { display: flex; justify-content: space-between; align-items: center; background: #e0e7ff; padding: 12px 18px; border-radius: 10px; font-weight: 600; color: var(--primary-color); }
 
+        /* D-Day Section */
         .dday-header { display: flex; justify-content: space-between; align-items: center; }
         .dday-display { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); margin-top: 8px; }
         .dday-input-group { display: flex; gap: 8px; margin-top: 12px; }
-        
+
+        /* Form Controls */
         input[type="text"], input[type="date"], input[type="number"] {
             background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main);
             padding: 9px 12px; border-radius: 8px; font-size: 0.9rem; outline: none; transition: all 0.2s;
         }
         input:focus { border-color: var(--primary-color); background-color: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-        
+
         button {
             background-color: var(--primary-color); color: #fff; border: none;
             padding: 9px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.9rem;
@@ -47,13 +48,16 @@
         button.btn-danger { background-color: #fee2e2; color: var(--danger-color); border: 1px solid #fca5a5; padding: 4px 8px; font-size: 0.75rem; border-radius: 6px; }
         button.btn-danger:hover { background-color: var(--danger-color); color: #fff; }
 
+        /* Add Form */
         .add-form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; background: var(--input-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); }
-        
+
+        /* Book Structure UI */
         .book-item { margin-top: 20px; border-bottom: 2px dashed var(--border-color); padding-bottom: 20px; }
         .book-item:last-child { border-bottom: none; }
         .book-header { display: flex; justify-content: space-between; align-items: center; font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
         .read-count { background-color: #e0e7ff; color: var(--primary-color); padding: 3px 10px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; margin-left: 8px; }
-        
+
+        /* Progress Bar UI */
         .progress-container { margin: 10px 0 16px 0; }
         .progress-info { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
         .progress-bar-bg { background-color: #e2e8f0; height: 10px; border-radius: 5px; overflow: hidden; }
@@ -61,10 +65,11 @@
 
         .chapter-item { margin-left: 12px; margin-top: 14px; border-left: 3px solid #cbd5e1; padding-left: 12px; }
         .chapter-header { font-size: 1.05rem; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 8px; }
-        
+
         .topic-item { margin-left: 12px; margin-top: 10px; background-color: var(--input-bg); padding: 10px 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .topic-header { font-size: 0.9rem; color: #475569; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 500; }
-        
+
+        /* Badges & Checkboxes */
         .badge-done { background-color: #d1fae5; color: #047857; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
         .problem-grid { display: flex; flex-wrap: wrap; gap: 6px; }
         .problem-btn {
@@ -74,142 +79,55 @@
         }
         .problem-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
         .problem-btn.active { background-color: var(--success-color); color: #fff; border-color: var(--success-color); font-weight: 700; }
-
-        .init-box { text-align: center; padding: 40px 20px; }
-        .init-inputs { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
-        .status-tag { font-size: 0.75rem; color: var(--text-sub); margin-left: 8px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="initSection" class="card init-box">
-        <h2>🔗 나만의 공부 페이지 주소 만들기</h2>
-        <p style="color: var(--text-sub); font-size: 0.9rem; margin-top: 8px;">
-            어디서든 아이디 없이 접속할 수 있는 나만의 닉네임을 입력해주세요.
-        </p>
-        <div class="init-inputs">
-            <input type="text" id="userKeyInput" placeholder="예: 민수 또는 mymath" style="width: 200px;">
-            <button onclick="setCustomKey()">내 전용 페이지 접속</button>
+    <div class="card">
+        <div class="dday-header">
+            <h2>🎯 목표 D-Day</h2>
+            <button class="btn-sub" onclick="toggleDDayInput()">설정 변경</button>
+        </div>
+        <div id="ddayDisplay" class="dday-display">목표일을 설정해주세요.</div>
+        <div id="ddayForm" class="dday-input-group" style="display: none;">
+            <input type="text" id="ddayTitle" placeholder="목표 이름 (예: 수능)">
+            <input type="date" id="ddayDate">
+            <button onclick="saveDDay()">저장</button>
         </div>
     </div>
 
-    <div id="mainContent" style="display: none; flex-direction: column; gap: 20px;">
-        <div class="user-bar">
-            <div>
-                <span id="userInfo"></span>
-                <span id="syncStatus" class="status-tag"></span>
-            </div>
-            <button class="btn-sub" onclick="copyMyUrl()">현재 주소 복사하기</button>
+    <div class="card">
+        <h2 style="margin-bottom: 4px;">📚 문제집 학습 관리</h2>
+        <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px;">
+            문제집, 대단원, 소단원(주제)과 문항 수를 입력해 학습 기록을 관리해보세요.
+        </p>
+
+        <div class="add-form">
+            <input type="text" id="inputBook" placeholder="문제집 명 (예: 수1)" style="flex: 1; min-width: 120px;">
+            <input type="text" id="inputChapter" placeholder="대단원 (예: 지수함수)" style="flex: 1; min-width: 120px;">
+            <input type="text" id="inputTopic" placeholder="소단원/주제 (예: 지수법칙)" style="flex: 1; min-width: 120px;">
+            <input type="number" id="inputCount" placeholder="문항수" style="width: 75px;" min="1">
+            <button onclick="addTopic()">추가</button>
         </div>
 
-        <div class="card">
-            <div class="dday-header">
-                <h2>🎯 목표 D-Day</h2>
-                <button class="btn-sub" onclick="toggleDDayInput()">설정 변경</button>
-            </div>
-            <div id="ddayDisplay" class="dday-display">목표일을 설정해주세요.</div>
-            <div id="ddayForm" class="dday-input-group" style="display: none;">
-                <input type="text" id="ddayTitle" placeholder="목표 이름 (예: 수능)">
-                <input type="date" id="ddayDate">
-                <button onclick="saveDDay()">저장</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2 style="margin-bottom: 4px;">📚 문제집 학습 관리</h2>
-            <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px;">
-                문제집, 대단원, 소단원(주제)과 문항 수를 입력해 학습 기록을 관리해보세요.
-            </p>
-
-            <div class="add-form">
-                <input type="text" id="inputBook" placeholder="문제집 명 (예: 수1)" style="flex: 1; min-width: 120px;">
-                <input type="text" id="inputChapter" placeholder="대단원 (예: 지수함수)" style="flex: 1; min-width: 120px;">
-                <input type="text" id="inputTopic" placeholder="소단원/주제 (예: 지수법칙)" style="flex: 1; min-width: 120px;">
-                <input type="number" id="inputCount" placeholder="문항수" style="width: 75px;" min="1">
-                <button onclick="addTopic()">추가</button>
-            </div>
-
-            <div id="bookTree"></div>
-        </div>
+        <div id="bookTree"></div>
     </div>
 </div>
 
 <script>
-    let userKey = "";
-    let safeKey = "";
-    let state = { dday: { title: '', date: '' }, books: [] };
+    let state = {
+        dday: JSON.parse(localStorage.getItem('study_dday')) || { title: '', date: '' },
+        books: JSON.parse(localStorage.getItem('study_books')) || []
+    };
 
-    function encodeKey(str) {
-        return btoa(encodeURIComponent(str)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-    }
-
-    function showStatus(msg) {
-        const el = document.getElementById('syncStatus');
-        if (el) el.innerText = msg;
-    }
-
-    async function init() {
-        const hash = decodeURIComponent(location.hash.replace('#', '')).trim();
-        if (hash) {
-            userKey = hash;
-            safeKey = encodeKey(hash);
-            
-            document.getElementById('initSection').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'flex';
-            document.getElementById('userInfo').innerText = `📌 내 공부방 (#${userKey})`;
-            
-            await loadData();
-        } else {
-            document.getElementById('initSection').style.display = 'block';
-            document.getElementById('mainContent').style.display = 'none';
-        }
-    }
-
-    function setCustomKey() {
-        const val = document.getElementById('userKeyInput').value.trim();
-        if (!val) return alert('닉네임을 입력해주세요.');
-        location.hash = `#${val}`;
-    }
-
-    function copyMyUrl() {
-        navigator.clipboard.writeText(location.href);
-        alert('현재 주소가 복사되었습니다! 이 주소를 북마크하거나 카톡으로 보낸 뒤 들어가면 언제든 내 공부 내용이 뜹니다.');
-    }
-
-    async function loadData() {
-        showStatus("(동기화 중...)");
-        try {
-            const res = await fetch(`https://kvdb.io/4y9y1d21Z6R5Jm2G7f4v6x/${safeKey}`);
-            if (res.ok) {
-                const data = await res.json();
-                if (data) state = data;
-                showStatus("🟢 실시간 연결됨");
-            } else {
-                showStatus("🟡 새 데이터 준비완료");
-            }
-        } catch (e) {
-            showStatus("🟢 준비 완료");
-        }
+    function saveData() {
+        localStorage.setItem('study_dday', JSON.stringify(state.dday));
+        localStorage.setItem('study_books', JSON.stringify(state.books));
         render();
     }
 
-    async function saveData() {
-        render();
-        if (!safeKey) return;
-        showStatus("(저장 중...)");
-        try {
-            await fetch(`https://kvdb.io/4y9y1d21Z6R5Jm2G7f4v6x/${safeKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(state)
-            });
-            showStatus("🟢 저장됨");
-        } catch (e) {
-            showStatus("🔴 저장 실패 (인터넷 확인)");
-        }
-    }
-
+    /* D-Day Logic */
     function toggleDDayInput() {
         const form = document.getElementById('ddayForm');
         form.style.display = form.style.display === 'none' ? 'flex' : 'none';
@@ -224,6 +142,23 @@
         saveData();
     }
 
+    function renderDDay() {
+        const display = document.getElementById('ddayDisplay');
+        if (!state.dday.date) {
+            display.innerText = '목표일을 설정해주세요.';
+            return;
+        }
+        const target = new Date(state.dday.date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        target.setHours(0, 0, 0, 0);
+
+        const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+        const dDayStr = diff === 0 ? 'D-Day' : diff > 0 ? `D-${diff}` : `D+${Math.abs(diff)}`;
+        display.innerText = `${state.dday.title} : ${dDayStr}`;
+    }
+
+    /* Book & Problem Logic */
     function addTopic() {
         const bookName = document.getElementById('inputBook').value.trim();
         const chapterName = document.getElementById('inputChapter').value.trim();
@@ -259,25 +194,33 @@
         const topic = state.books[bIdx].chapters[cIdx].topics[tIdx];
         topic.problems[pIdx] = !topic.problems[pIdx];
 
+        checkCompletions(bIdx);
+        saveData();
+    }
+
+    function checkCompletions(bIdx) {
+        const book = state.books[bIdx];
         let totalProblems = 0;
         let solvedProblems = 0;
 
-        state.books[bIdx].chapters.forEach(c => {
-            c.topics.forEach(t => {
-                totalProblems += t.problems.length;
-                solvedProblems += t.problems.filter(p => p).length;
+        book.chapters.forEach(chapter => {
+            chapter.topics.forEach(topic => {
+                totalProblems += topic.problems.length;
+                solvedProblems += topic.problems.filter(p => p).length;
             });
         });
 
         if (totalProblems > 0 && totalProblems === solvedProblems) {
-            state.books[bIdx].readCount += 1;
-            state.books[bIdx].chapters.forEach(c => {
-                c.topics.forEach(t => { t.problems = t.problems.map(() => false); });
-            });
-            alert(`🎉 모든 문항 완료! ${state.books[bIdx].readCount}회독 달성!`);
-        }
+            book.readCount += 1;
 
-        saveData();
+            book.chapters.forEach(chapter => {
+                chapter.topics.forEach(topic => {
+                    topic.problems = topic.problems.map(() => false);
+                });
+            });
+
+            alert(`🎉 [${book.name}] 모든 문항을 완료하여 ${book.readCount}회독 달성! 기록이 초기화되어 다음 회독을 시작합니다.`);
+        }
     }
 
     function deleteBook(bIdx) {
@@ -288,42 +231,30 @@
     }
 
     function deleteTopic(bIdx, cIdx, tIdx) {
-        if (!confirm('이 소단원을 삭제하시겠습니까?')) return;
-        const book = state.books[bIdx];
-        const chapter = book.chapters[cIdx];
-        
-        chapter.topics.splice(tIdx, 1);
-        if (chapter.topics.length === 0) book.chapters.splice(cIdx, 1);
-        if (book.chapters.length === 0) state.books.splice(bIdx, 1);
+        if (confirm('이 소단원을 삭제하시겠습니까?')) {
+            if (!state.books[bIdx] || !state.books[bIdx].chapters[cIdx]) return;
 
-        saveData();
-    }
+            const book = state.books[bIdx];
+            const chapter = book.chapters[cIdx];
 
-    function renderDDay() {
-        const display = document.getElementById('ddayDisplay');
-        if (!state.dday || !state.dday.date) {
-            display.innerText = '목표일을 설정해주세요.';
-            return;
+            chapter.topics.splice(tIdx, 1);
+
+            if (chapter.topics.length === 0) {
+                book.chapters.splice(cIdx, 1);
+            }
+            if (book.chapters.length === 0) {
+                state.books.splice(bIdx, 1);
+            }
+
+            saveData();
         }
-        const target = new Date(state.dday.date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        target.setHours(0, 0, 0, 0);
-        
-        const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-        const dDayStr = diff === 0 ? 'D-Day' : diff > 0 ? `D-${diff}` : `D+${Math.abs(diff)}`;
-        display.innerText = `${state.dday.title} : ${dDayStr}`;
     }
 
+    /* UI Rendering */
     function render() {
         renderDDay();
         const tree = document.getElementById('bookTree');
         tree.innerHTML = '';
-
-        if (!state.books || state.books.length === 0) {
-            tree.innerHTML = '<p style="color: var(--text-sub); text-align: center; padding: 20px;">등록된 문제집이 없습니다. 위에서 추가해주세요!</p>';
-            return;
-        }
 
         state.books.forEach((book, bIdx) => {
             const bookEl = document.createElement('div');
@@ -340,7 +271,7 @@
                 chapter.topics.forEach((topic, tIdx) => {
                     const topicTotal = topic.problems.length;
                     const topicSolved = topic.problems.filter(p => p).length;
-                    
+
                     totalProblems += topicTotal;
                     solvedProblems += topicSolved;
 
@@ -361,7 +292,7 @@
                                     <strong>① 주제 ${tIdx + 1}.</strong> ${topic.name}
                                     ${isTopicDone ? '<span class="badge-done">소단원 완료</span>' : ''}
                                 </div>
-                                <button type="button" class="btn-danger" onclick="deleteTopic(${bIdx}, ${cIdx}, ${tIdx})">삭제</button>
+                                <button class="btn-danger" onclick="deleteTopic(${bIdx}, ${cIdx}, ${tIdx})">삭제</button>
                             </div>
                             <div class="problem-grid">${gridHtml}</div>
                         </div>
@@ -385,11 +316,11 @@
                 <div class="book-header">
                     <div>
                         ${bIdx + 1}) ${book.name} 
-                        <span class="read-count">${book.readCount || 0}회독</span>
+                        <span class="read-count">${book.readCount}회독</span>
                     </div>
-                    <button type="button" class="btn-danger" onclick="deleteBook(${bIdx})">책 전체 삭제</button>
+                    <button class="btn-danger" onclick="deleteBook(${bIdx})">책 전체 삭제</button>
                 </div>
-                
+
                 <div class="progress-container">
                     <div class="progress-info">
                         <span>진도율 (${solvedProblems} / ${totalProblems} 문항)</span>
@@ -406,8 +337,7 @@
         });
     }
 
-    window.addEventListener('hashchange', init);
-    window.onload = init;
+    render();
 </script>
 
 </body>

@@ -46,7 +46,7 @@
         button.btn-sub { background-color: #e2e8f0; color: var(--text-main); }
         button.btn-sub:hover { background-color: #cbd5e1; }
         
-        /* 수정 버튼 스타일 변경 (회색 테두리 + 어두운 회색 글씨) */
+        /* 수정 버튼 스타일 (회색 테두리 + 어두운 회색 글씨) */
         button.btn-edit {
             background-color: #ffffff;
             color: #334155;
@@ -75,7 +75,7 @@
         /* Add Form */
         .add-form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; background: var(--input-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); }
 
-        /* Drag Handle Style (가장 우측) */
+        /* Drag Handle Style (우측 핸들) */
         .drag-handle {
             cursor: grab;
             color: #64748b;
@@ -376,34 +376,38 @@
         }
     }
 
-    /* Drag & Drop Logic (핸들 전용) */
-    let draggedElement = null;
+    /* Fixed Drag & Drop Logic */
+    let draggedItem = null;
 
     function enableDragAndDrop() {
         const handles = document.querySelectorAll('.drag-handle');
         
         handles.forEach(handle => {
-            handle.addEventListener('mousedown', () => {
-                const target = handle.closest('.category-item, .book-item');
-                if (target) target.draggable = true;
-            });
-            
-            handle.addEventListener('mouseup', () => {
-                const target = handle.closest('.category-item, .book-item');
-                if (target) target.draggable = false;
-            });
+            const target = handle.closest('.category-item, .book-item');
+            if (!target) return;
 
-            handle.addEventListener('touchstart', () => {
-                const target = handle.closest('.category-item, .book-item');
-                if (target) target.draggable = true;
-            }, { passive: true });
+            // 마우스/터치 마다운 시 해당 요소만 draggable 활성화
+            const startDrag = (e) => {
+                e.stopPropagation();
+                target.draggable = true;
+            };
+
+            const endDrag = () => {
+                target.draggable = false;
+            };
+
+            handle.addEventListener('mousedown', startDrag);
+            handle.addEventListener('mouseup', endDrag);
+            handle.addEventListener('touchstart', startDrag, { passive: true });
+            handle.addEventListener('touchend', endDrag);
         });
 
-        const draggableItems = document.querySelectorAll('.category-item, .book-item');
+        const allItems = document.querySelectorAll('.category-item, .book-item');
 
-        draggableItems.forEach(item => {
+        allItems.forEach(item => {
             item.addEventListener('dragstart', (e) => {
-                draggedElement = item;
+                e.stopPropagation();
+                draggedItem = item;
                 e.dataTransfer.effectAllowed = 'move';
                 e.dataTransfer.setData('text/plain', JSON.stringify({
                     type: item.dataset.type,
@@ -415,28 +419,31 @@
 
             item.addEventListener('dragover', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 e.dataTransfer.dropEffect = 'move';
             });
 
-            item.addEventListener('dragend', () => {
+            item.addEventListener('dragend', (e) => {
+                e.stopPropagation();
                 item.classList.remove('dragging');
                 item.draggable = false;
-                draggedElement = null;
+                draggedItem = null;
             });
 
             item.addEventListener('drop', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                if (!draggedElement) return;
+                if (!draggedItem) return;
 
-                const srcType = draggedElement.dataset.type;
+                const srcType = draggedItem.dataset.type;
                 const targetType = item.dataset.type;
 
+                // 서로 같은 종류끼리만 드래그 앤 드롭 이동 허용
                 if (srcType !== targetType) return;
 
                 if (srcType === 'category') {
-                    const fromIdx = parseInt(draggedElement.dataset.catIdx);
+                    const fromIdx = parseInt(draggedItem.dataset.catIdx);
                     const toIdx = parseInt(item.dataset.catIdx);
                     if (fromIdx !== toIdx) {
                         const [moved] = state.categories.splice(fromIdx, 1);
@@ -444,11 +451,12 @@
                         saveData();
                     }
                 } else if (srcType === 'book') {
-                    const fromCat = parseInt(draggedElement.dataset.catIdx);
-                    const fromBook = parseInt(draggedElement.dataset.bIdx);
+                    const fromCat = parseInt(draggedItem.dataset.catIdx);
+                    const fromBook = parseInt(draggedItem.dataset.bIdx);
                     const toCat = parseInt(item.dataset.catIdx);
                     const toBook = parseInt(item.dataset.bIdx);
 
+                    // 같은 카테고리 내에서 문제집 순서 이동
                     if (fromCat === toCat && fromBook !== toBook) {
                         const books = state.categories[fromCat].books;
                         const [moved] = books.splice(fromBook, 1);

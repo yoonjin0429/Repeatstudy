@@ -45,21 +45,63 @@
         button:hover { background-color: var(--primary-hover); }
         button.btn-sub { background-color: #e2e8f0; color: var(--text-main); }
         button.btn-sub:hover { background-color: #cbd5e1; }
-        button.btn-edit { background-color: #e0e7ff; color: var(--primary-color); padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; }
-        button.btn-edit:hover { background-color: var(--primary-color); color: #fff; }
-        button.btn-danger { background-color: #fee2e2; color: var(--danger-color); border: 1px solid #fca5a5; padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; }
+        
+        /* 수정 버튼 스타일 변경 (회색 테두리 + 어두운 회색 글씨) */
+        button.btn-edit {
+            background-color: #ffffff;
+            color: #334155;
+            border: 1px solid #94a3b8;
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        button.btn-edit:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            border-color: #64748b;
+        }
+        
+        button.btn-danger {
+            background-color: #fee2e2;
+            color: var(--danger-color);
+            border: 1px solid #fca5a5;
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+        }
         button.btn-danger:hover { background-color: var(--danger-color); color: #fff; }
 
         /* Add Form */
         .add-form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; background: var(--input-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); }
 
-        /* Drag Handle Style */
+        /* Drag Handle Style (가장 우측) */
         .drag-handle {
-            cursor: grab; color: var(--text-sub); font-size: 1.1rem; padding: 0 6px;
-            user-select: none; display: flex; align-items: center; justify-content: center;
+            cursor: grab;
+            color: #64748b;
+            font-size: 1.2rem;
+            padding: 2px 8px;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            margin-left: 4px;
+            transition: background 0.15s;
         }
-        .drag-handle:active { cursor: grabbing; color: var(--primary-color); }
-        .dragging { opacity: 0.4; border: 2px dashed var(--primary-color) !important; }
+        .drag-handle:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+            color: var(--primary-color);
+        }
+        
+        .dragging {
+            opacity: 0.4;
+            border: 2px dashed var(--primary-color) !important;
+        }
 
         /* Category UI */
         .category-item { margin-top: 24px; background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; transition: background 0.2s; }
@@ -118,7 +160,7 @@
     <div class="card">
         <h2 style="margin-bottom: 4px;">📚 문제집 학습 관리</h2>
         <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px;">
-            아이콘(☰)을 꾹 눌러 순서를 이동할 수 있습니다.
+            우측의 <strong>☰ 아이콘</strong>을 꾹 눌러서 위아래로 끌어다 놓으면 순서를 변경할 수 있습니다.
         </p>
 
         <div class="add-form">
@@ -139,20 +181,6 @@
         dday: JSON.parse(localStorage.getItem('study_dday')) || { title: '', date: '' },
         categories: JSON.parse(localStorage.getItem('study_categories')) || []
     };
-
-    // 기존 데이터 변환 처리
-    (function migrateData() {
-        const oldBooks = JSON.parse(localStorage.getItem('study_books'));
-        if (oldBooks && oldBooks.length > 0) {
-            state.categories.push({
-                name: '기본 그룹',
-                collapsed: false,
-                books: oldBooks
-            });
-            localStorage.removeItem('study_books');
-            localStorage.setItem('study_categories', JSON.stringify(state.categories));
-        }
-    })();
 
     function saveData() {
         localStorage.setItem('study_dday', JSON.stringify(state.dday));
@@ -191,7 +219,7 @@
         display.innerText = `${state.dday.title} : ${dDayStr}`;
     }
 
-    /* Logic */
+    /* Add Topic */
     function addTopic() {
         let catName = document.getElementById('inputCategory').value.trim() || '기본 그룹';
         const bookName = document.getElementById('inputBook').value.trim();
@@ -348,60 +376,88 @@
         }
     }
 
-    /* Drag & Drop State */
-    let dragSrc = null;
+    /* Drag & Drop Logic (핸들 전용) */
+    let draggedElement = null;
 
-    function handleDragStart(e) {
-        dragSrc = this;
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', JSON.stringify({
-            type: this.dataset.type,
-            catIdx: this.dataset.catIdx,
-            bIdx: this.dataset.bIdx
-        }));
-        this.classList.add('dragging');
-    }
+    function enableDragAndDrop() {
+        const handles = document.querySelectorAll('.drag-handle');
+        
+        handles.forEach(handle => {
+            handle.addEventListener('mousedown', () => {
+                const target = handle.closest('.category-item, .book-item');
+                if (target) target.draggable = true;
+            });
+            
+            handle.addEventListener('mouseup', () => {
+                const target = handle.closest('.category-item, .book-item');
+                if (target) target.draggable = false;
+            });
 
-    function handleDragOver(e) {
-        if (e.preventDefault) e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        return false;
-    }
+            handle.addEventListener('touchstart', () => {
+                const target = handle.closest('.category-item, .book-item');
+                if (target) target.draggable = true;
+            }, { passive: true });
+        });
 
-    function handleDragEnd(e) {
-        this.classList.remove('dragging');
-    }
+        const draggableItems = document.querySelectorAll('.category-item, .book-item');
 
-    function handleDrop(e) {
-        if (e.stopPropagation) e.stopPropagation();
+        draggableItems.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedElement = item;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', JSON.stringify({
+                    type: item.dataset.type,
+                    catIdx: item.dataset.catIdx,
+                    bIdx: item.dataset.bIdx
+                }));
+                item.classList.add('dragging');
+            });
 
-        const srcData = JSON.parse(e.dataTransfer.getData('text/plain'));
-        const targetType = this.dataset.type;
+            item.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            });
 
-        if (srcData.type !== targetType) return false;
+            item.addEventListener('dragend', () => {
+                item.classList.remove('dragging');
+                item.draggable = false;
+                draggedElement = null;
+            });
 
-        if (srcData.type === 'category') {
-            const fromIdx = parseInt(srcData.catIdx);
-            const toIdx = parseInt(this.dataset.catIdx);
-            if (fromIdx !== toIdx) {
-                const [movedCat] = state.categories.splice(fromIdx, 1);
-                state.categories.splice(toIdx, 0, movedCat);
-                saveData();
-            }
-        } else if (srcData.type === 'book') {
-            const fromCat = parseInt(srcData.catIdx);
-            const fromBook = parseInt(srcData.bIdx);
-            const toCat = parseInt(this.dataset.catIdx);
-            const toBook = parseInt(this.dataset.bIdx);
+            item.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
 
-            if (fromCat === toCat && fromBook !== toBook) {
-                const books = state.categories[fromCat].books;
-                const [movedBook] = books.splice(fromBook, 1);
-                books.splice(toBook, 0, movedBook);
-                saveData();
-            }
-        }
-        return false;
+                if (!draggedElement) return;
+
+                const srcType = draggedElement.dataset.type;
+                const targetType = item.dataset.type;
+
+                if (srcType !== targetType) return;
+
+                if (srcType === 'category') {
+                    const fromIdx = parseInt(draggedElement.dataset.catIdx);
+                    const toIdx = parseInt(item.dataset.catIdx);
+                    if (fromIdx !== toIdx) {
+                        const [moved] = state.categories.splice(fromIdx, 1);
+                        state.categories.splice(toIdx, 0, moved);
+                        saveData();
+                    }
+                } else if (srcType === 'book') {
+                    const fromCat = parseInt(draggedElement.dataset.catIdx);
+                    const fromBook = parseInt(draggedElement.dataset.bIdx);
+                    const toCat = parseInt(item.dataset.catIdx);
+                    const toBook = parseInt(item.dataset.bIdx);
+
+                    if (fromCat === toCat && fromBook !== toBook) {
+                        const books = state.categories[fromCat].books;
+                        const [moved] = books.splice(fromBook, 1);
+                        books.splice(toBook, 0, moved);
+                        saveData();
+                    }
+                }
+            });
+        });
     }
 
     /* UI Rendering */
@@ -413,14 +469,8 @@
         state.categories.forEach((category, catIdx) => {
             const catEl = document.createElement('div');
             catEl.className = 'category-item';
-            catEl.draggable = true;
             catEl.dataset.type = 'category';
             catEl.dataset.catIdx = catIdx;
-
-            catEl.addEventListener('dragstart', handleDragStart);
-            catEl.addEventListener('dragover', handleDragOver);
-            catEl.addEventListener('drop', handleDrop);
-            catEl.addEventListener('dragend', handleDragEnd);
 
             const isCatCollapsed = category.collapsed || false;
             let booksHtml = '';
@@ -485,19 +535,17 @@
                 const isBookCollapsed = book.collapsed || false;
 
                 booksHtml += `
-                    <div class="book-item" draggable="true" data-type="book" data-cat-idx="${catIdx}" data-b-idx="${bIdx}">
+                    <div class="book-item" data-type="book" data-cat-idx="${catIdx}" data-b-idx="${bIdx}">
                         <div class="book-header">
-                            <div style="display: flex; align-items: center;">
-                                <span class="drag-handle" title="드래그하여 순서 변경">☰</span>
-                                <div class="book-title-clickable" onclick="toggleBookCollapse(${catIdx}, ${bIdx})">
-                                    <span class="toggle-icon">${isBookCollapsed ? '▶' : '▼'}</span>
-                                    <span>📖 ${bIdx + 1}) ${book.name}</span>
-                                    <span class="read-count">${book.readCount}회독</span>
-                                </div>
+                            <div class="book-title-clickable" onclick="toggleBookCollapse(${catIdx}, ${bIdx})">
+                                <span class="toggle-icon">${isBookCollapsed ? '▶' : '▼'}</span>
+                                <span>📖 ${bIdx + 1}) ${book.name}</span>
+                                <span class="read-count">${book.readCount}회독</span>
                             </div>
                             <div class="action-group">
                                 <button class="btn-edit" onclick="editBook(${catIdx}, ${bIdx})">수정</button>
                                 <button class="btn-danger" onclick="deleteBook(${catIdx}, ${bIdx})">삭제</button>
+                                <span class="drag-handle" title="드래그하여 순서 변경">☰</span>
                             </div>
                         </div>
 
@@ -519,16 +567,14 @@
 
             catEl.innerHTML = `
                 <div class="category-header">
-                    <div style="display: flex; align-items: center;">
-                        <span class="drag-handle" title="드래그하여 순서 변경">☰</span>
-                        <div class="category-title" onclick="toggleCategoryCollapse(${catIdx})">
-                            <span class="toggle-icon">${isCatCollapsed ? '▶' : '▼'}</span>
-                            <span>📁 ${category.name}</span>
-                        </div>
+                    <div class="category-title" onclick="toggleCategoryCollapse(${catIdx})">
+                        <span class="toggle-icon">${isCatCollapsed ? '▶' : '▼'}</span>
+                        <span>📁 ${category.name}</span>
                     </div>
                     <div class="action-group">
                         <button class="btn-edit" onclick="editCategory(${catIdx})">수정</button>
                         <button class="btn-danger" onclick="deleteCategory(${catIdx})">카테고리 삭제</button>
+                        <span class="drag-handle" title="드래그하여 순서 변경">☰</span>
                     </div>
                 </div>
 
@@ -540,13 +586,7 @@
             tree.appendChild(catEl);
         });
 
-        // 문제집 요소들에 이벤트 바인딩
-        document.querySelectorAll('.book-item').forEach(bookEl => {
-            bookEl.addEventListener('dragstart', handleDragStart);
-            bookEl.addEventListener('dragover', handleDragOver);
-            bookEl.addEventListener('drop', handleDrop);
-            bookEl.addEventListener('dragend', handleDragEnd);
-        });
+        enableDragAndDrop();
     }
 
     render();

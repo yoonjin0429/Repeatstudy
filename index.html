@@ -171,7 +171,7 @@
     <div class="card">
         <h2 style="margin-bottom: 4px;">📚 문제집 학습 관리</h2>
         <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px;">
-            💡 <strong>사용 팁:</strong> 짧게 누르면 <strong>완료(초록색)</strong>, 0.4초간 꾹 누르면 <strong>복습/질문(⭐)</strong>이 토글됩니다. (동시 적용 가능!)
+            💡 <strong>사용 팁:</strong> 짧게 누르면 <strong>완료(초록색)</strong>, 길게 꾹 누르면 <strong>복습/질문(⭐)</strong>이 토글됩니다. (동시 적용 가능!)
         </p>
 
         <div class="add-form">
@@ -376,7 +376,7 @@
                 timer = setTimeout(() => {
                     isLongPress = true;
                     toggleProblemStar(catIdx, bIdx, cIdx, tIdx, pIdx);
-                }, 400); // 0.4초 누르면 별표
+                }, 700); // 0.7초 누르면 별표
             };
 
             const handleEnd = (e) => {

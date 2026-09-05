@@ -16,10 +16,13 @@
             --input-bg: #f8fafc;
             --success-color: #10b981;
             --danger-color: #ef4444;
-            --star-color: #f59e0b; /* 별표 색상 (황금색) */
+            --star-color: #f59e0b;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+        * { 
+            box-sizing: border-box; margin: 0; padding: 0; 
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; 
+        }
         body { background-color: var(--bg-color); color: var(--text-main); padding: 24px; line-height: 1.5; }
         .container { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 
@@ -109,34 +112,43 @@
 
         /* Badges & Problem Buttons UI */
         .badge-done { background-color: #d1fae5; color: #047857; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
-        .problem-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+        .problem-grid { display: flex; flex-wrap: wrap; gap: 6px; }
         
         .problem-btn {
             position: relative;
-            width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-color);
-            background-color: #ffffff; color: var(--text-sub); font-size: 0.75rem; font-weight: 500;
+            width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color);
+            background-color: #ffffff; color: var(--text-sub); font-size: 0.8rem; font-weight: 500;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
-            user-select: none; transition: all 0.15s;
-            -webkit-touch-callout: none; /* 모바일 우클릭 메뉴 방지 */
+            
+            /* 텍스트 드래그 및 우클릭 팝업 방지 */
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            transition: background 0.15s, border-color 0.15s;
         }
         .problem-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
         
-        /* 완료(체크) 완료 상태 */
-        .problem-btn.active { background-color: var(--success-color); color: #fff; border-color: var(--success-color); font-weight: 700; }
+        /* 풀이 완료 (초록색) */
+        .problem-btn.active { 
+            background-color: var(--success-color); 
+            color: #fff; 
+            border-color: var(--success-color); 
+            font-weight: 700; 
+        }
         
-        /* 별표(질문/복습용) 테두리 및 아이콘 */
+        /* 별표(질문/복습용) 테두리 + 별 아이콘 추가 */
         .problem-btn.starred {
             border: 2px solid var(--star-color) !important;
-            color: #b45309;
-            font-weight: 700;
+            box-shadow: 0 0 4px rgba(245, 158, 11, 0.4);
         }
         .problem-btn.starred::after {
             content: '⭐';
             position: absolute;
-            top: -6px;
-            right: -6px;
-            font-size: 0.65rem;
+            top: -7px;
+            right: -7px;
+            font-size: 0.75rem;
             line-height: 1;
+            filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.3));
         }
     </style>
 </head>
@@ -159,7 +171,7 @@
     <div class="card">
         <h2 style="margin-bottom: 4px;">📚 문제집 학습 관리</h2>
         <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px;">
-            💡 <strong>사용 팁:</strong> 문제 번호를 <strong>클릭</strong>하면 풀이 완료(체크), <strong>0.5초간 꾹 누르면</strong> 복습/질문용 별표(⭐)가 켜집니다!
+            💡 <strong>사용 팁:</strong> 짧게 누르면 <strong>완료(초록색)</strong>, 0.4초간 꾹 누르면 <strong>복습/질문(⭐)</strong>이 토글됩니다. (동시 적용 가능!)
         </p>
 
         <div class="add-form">
@@ -248,7 +260,6 @@
             book.chapters.push(chapter);
         }
 
-        // 각 문제를 객체 형태로 관리 { done: false, starred: false }
         const problems = Array.from({ length: count }, () => ({ done: false, starred: false }));
         chapter.topics.push({ name: topicName, problems });
 
@@ -318,12 +329,11 @@
         saveData();
     }
 
-    /* Problem Actions: Normal Click (Done) & Long Press (Starred) */
+    /* Toggle Handlers */
     function toggleProblemDone(catIdx, bIdx, cIdx, tIdx, pIdx) {
         const topic = state.categories[catIdx].books[bIdx].chapters[cIdx].topics[tIdx];
-        const prob = topic.problems[pIdx];
+        let prob = topic.problems[pIdx];
         
-        // 데이터 호환성 보장 (기존 boolean일 경우 처리)
         if (typeof prob === 'boolean') {
             topic.problems[pIdx] = { done: !prob, starred: false };
         } else {
@@ -336,7 +346,7 @@
 
     function toggleProblemStar(catIdx, bIdx, cIdx, tIdx, pIdx) {
         const topic = state.categories[catIdx].books[bIdx].chapters[cIdx].topics[tIdx];
-        const prob = topic.problems[pIdx];
+        let prob = topic.problems[pIdx];
 
         if (typeof prob === 'boolean') {
             topic.problems[pIdx] = { done: prob, starred: true };
@@ -347,49 +357,55 @@
         saveData();
     }
 
-    /* Long Press Event Handler Binding */
-    function attachLongPressEvents() {
+    /* Robust Long-Press & Tap Event Binder */
+    function attachProblemEvents() {
         const buttons = document.querySelectorAll('.problem-btn');
-        
+
         buttons.forEach(btn => {
-            let pressTimer = null;
+            let timer = null;
             let isLongPress = false;
 
-            const start = (e) => {
+            const catIdx = parseInt(btn.dataset.catIdx);
+            const bIdx = parseInt(btn.dataset.bIdx);
+            const cIdx = parseInt(btn.dataset.cIdx);
+            const tIdx = parseInt(btn.dataset.tIdx);
+            const pIdx = parseInt(btn.dataset.pIdx);
+
+            const handleStart = (e) => {
                 isLongPress = false;
-                pressTimer = setTimeout(() => {
+                timer = setTimeout(() => {
                     isLongPress = true;
-                    const { catIdx, bIdx, cIdx, tIdx, pIdx } = btn.dataset;
-                    toggleProblemStar(parseInt(catIdx), parseInt(bIdx), parseInt(cIdx), parseInt(tIdx), parseInt(pIdx));
-                }, 500); // 0.5초 누르고 있으면 별표 토글
+                    toggleProblemStar(catIdx, bIdx, cIdx, tIdx, pIdx);
+                }, 400); // 0.4초 누르면 별표
             };
 
-            const cancel = (e) => {
-                if (pressTimer) {
-                    clearTimeout(pressTimer);
-                    pressTimer = null;
-                }
+            const handleEnd = (e) => {
+                if (timer) clearTimeout(timer);
             };
 
-            const click = (e) => {
+            const handleClick = (e) => {
+                e.preventDefault();
                 if (isLongPress) {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
+                    isLongPress = false;
                     return;
                 }
-                const { catIdx, bIdx, cIdx, tIdx, pIdx } = btn.dataset;
-                toggleProblemDone(parseInt(catIdx), parseInt(bIdx), parseInt(cIdx), parseInt(tIdx), parseInt(pIdx));
+                toggleProblemDone(catIdx, bIdx, cIdx, tIdx, pIdx);
             };
 
-            btn.addEventListener('mousedown', start);
-            btn.addEventListener('touchstart', start, { passive: true });
-            
-            btn.addEventListener('mouseup', cancel);
-            btn.addEventListener('mouseleave', cancel);
-            btn.addEventListener('touchend', cancel);
-            btn.addEventListener('touchcancel', cancel);
+            // 브라우저 기본 드래그 및 우클릭 메뉴 방지
+            btn.oncontextmenu = (e) => e.preventDefault();
+            btn.ondragstart = () => false;
 
-            btn.addEventListener('click', click);
+            // 터치/마우스 다운 이벤트
+            btn.addEventListener('mousedown', handleStart);
+            btn.addEventListener('touchstart', handleStart, { passive: true });
+
+            btn.addEventListener('mouseup', handleEnd);
+            btn.addEventListener('mouseleave', handleEnd);
+            btn.addEventListener('touchend', handleEnd);
+            btn.addEventListener('touchcancel', handleEnd);
+
+            btn.addEventListener('click', handleClick);
         });
     }
 
@@ -410,7 +426,7 @@
                 chapter.topics.forEach(topic => {
                     topic.problems = topic.problems.map(p => {
                         const isStarred = typeof p === 'object' ? p.starred : false;
-                        return { done: false, starred: isStarred }; // 완료 시 체크만 초기화, 별표는 유지
+                        return { done: false, starred: isStarred }; // N회독 달성 시 체크는 초기화, 별표는 보존
                     });
                 });
             });
@@ -554,8 +570,6 @@
 
                     chapter.topics.forEach((topic, tIdx) => {
                         const topicTotal = topic.problems.length;
-                        
-                        // 하위 호환성 체크 (객체 혹은 기존 boolean)
                         const topicSolved = topic.problems.filter(p => typeof p === 'boolean' ? p : p.done).length;
                         totalProblems += topicTotal;
                         solvedProblems += topicSolved;
@@ -669,7 +683,7 @@
         });
 
         enableDragAndDrop();
-        attachLongPressEvents();
+        attachProblemEvents();
     }
 
     render();

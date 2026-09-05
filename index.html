@@ -32,55 +32,59 @@
         .dday-input-group { display: flex; gap: 8px; margin-top: 12px; }
 
         /* Form Controls */
-        input[type="text"], input[type="date"], input[type="number"] {
+        input[type="text"], input[type="date"], input[type="number"], select {
             background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main);
-            padding: 9px 12px; border-radius: 8px; font-size: 0.9rem; outline: none; transition: all 0.2s;
+            padding: 8px 10px; border-radius: 8px; font-size: 0.85rem; outline: none; transition: all 0.2s;
         }
-        input:focus { border-color: var(--primary-color); background-color: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        input:focus, select:focus { border-color: var(--primary-color); background-color: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
 
         button {
             background-color: var(--primary-color); color: #fff; border: none;
-            padding: 9px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.9rem;
+            padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.85rem;
         }
         button:hover { background-color: var(--primary-hover); }
         button.btn-sub { background-color: #e2e8f0; color: var(--text-main); }
         button.btn-sub:hover { background-color: #cbd5e1; }
-        button.btn-danger { background-color: #fee2e2; color: var(--danger-color); border: 1px solid #fca5a5; padding: 4px 8px; font-size: 0.75rem; border-radius: 6px; }
+        button.btn-edit { background-color: #e0e7ff; color: var(--primary-color); padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; }
+        button.btn-edit:hover { background-color: var(--primary-color); color: #fff; }
+        button.btn-danger { background-color: #fee2e2; color: var(--danger-color); border: 1px solid #fca5a5; padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; }
         button.btn-danger:hover { background-color: var(--danger-color); color: #fff; }
 
         /* Add Form */
         .add-form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; background: var(--input-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); }
 
+        /* Category UI */
+        .category-item { margin-top: 24px; background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; }
+        .category-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg-color); padding-bottom: 12px; margin-bottom: 12px; }
+        .category-title { display: flex; align-items: center; gap: 8px; font-size: 1.3rem; font-weight: 700; color: var(--primary-color); cursor: pointer; user-select: none; }
+
         /* Book Structure UI */
-        .book-item { margin-top: 20px; border-bottom: 2px dashed var(--border-color); padding-bottom: 20px; }
-        .book-item:last-child { border-bottom: none; }
-        .book-header { display: flex; justify-content: space-between; align-items: center; font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
+        .book-item { margin-top: 14px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; background-color: #fff; }
+        .book-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .book-title-clickable { display: flex; align-items: center; cursor: pointer; user-select: none; font-size: 1.1rem; font-weight: 700; }
+        .toggle-icon { display: inline-block; width: 18px; font-size: 0.8rem; color: var(--text-sub); }
+        .read-count { background-color: #e0e7ff; color: var(--primary-color); padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; margin-left: 6px; }
         
-        /* 접기/펴기 가능한 제목 영역 스타일 */
-        .book-title-clickable { display: flex; align-items: center; cursor: pointer; user-select: none; padding: 4px 8px; margin-left: -8px; border-radius: 6px; transition: background-color 0.15s; }
-        .book-title-clickable:hover { background-color: #f1f5f9; }
-        .toggle-icon { display: inline-block; width: 18px; font-size: 0.8rem; color: var(--text-sub); transition: transform 0.2s; }
-        
-        .read-count { background-color: #e0e7ff; color: var(--primary-color); padding: 3px 10px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; margin-left: 8px; }
+        .action-group { display: flex; align-items: center; gap: 6px; }
 
         /* Progress Bar UI */
-        .progress-container { margin: 10px 0 16px 0; }
-        .progress-info { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
-        .progress-bar-bg { background-color: #e2e8f0; height: 10px; border-radius: 5px; overflow: hidden; }
+        .progress-container { margin: 10px 0 14px 0; }
+        .progress-info { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
+        .progress-bar-bg { background-color: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; }
         .progress-bar-fill { background-color: var(--primary-color); height: 100%; width: 0%; transition: width 0.3s ease; }
 
-        .chapter-item { margin-left: 12px; margin-top: 14px; border-left: 3px solid #cbd5e1; padding-left: 12px; }
-        .chapter-header { font-size: 1.05rem; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 8px; }
+        .chapter-item { margin-left: 8px; margin-top: 12px; border-left: 3px solid #cbd5e1; padding-left: 10px; }
+        .chapter-header { font-size: 0.95rem; font-weight: 600; color: #334155; display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
 
-        .topic-item { margin-left: 12px; margin-top: 10px; background-color: var(--input-bg); padding: 10px 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        .topic-header { font-size: 0.9rem; color: #475569; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 500; }
+        .topic-item { margin-top: 8px; background-color: var(--input-bg); padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .topic-header { font-size: 0.85rem; color: #475569; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-weight: 500; }
 
         /* Badges & Checkboxes */
-        .badge-done { background-color: #d1fae5; color: #047857; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
-        .problem-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+        .badge-done { background-color: #d1fae5; color: #047857; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+        .problem-grid { display: flex; flex-wrap: wrap; gap: 5px; }
         .problem-btn {
-            width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-color);
-            background-color: #ffffff; color: var(--text-sub); font-size: 0.8rem; font-weight: 500;
+            width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border-color);
+            background-color: #ffffff; color: var(--text-sub); font-size: 0.75rem; font-weight: 500;
             display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none; transition: all 0.15s;
         }
         .problem-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
@@ -106,14 +110,15 @@
     <div class="card">
         <h2 style="margin-bottom: 4px;">📚 문제집 학습 관리</h2>
         <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px;">
-            문제집, 대단원, 소단원(주제)과 문항 수를 입력해 학습 기록을 관리해보세요. (문제집 제목을 누르면 접을 수 있습니다)
+            카테고리, 문제집, 단원을 입력해 관리해 보세요. (제목 클릭 시 접기/펴기 가능)
         </p>
 
         <div class="add-form">
-            <input type="text" id="inputBook" placeholder="문제집 명 (예: 수1)" style="flex: 1; min-width: 120px;">
-            <input type="text" id="inputChapter" placeholder="대단원 (예: 지수함수)" style="flex: 1; min-width: 120px;">
-            <input type="text" id="inputTopic" placeholder="소단원/주제 (예: 지수법칙)" style="flex: 1; min-width: 120px;">
-            <input type="number" id="inputCount" placeholder="문항수" style="width: 75px;" min="1">
+            <input type="text" id="inputCategory" placeholder="카테고리 (예: 쎈, 미입력시 기본)" style="flex: 1; min-width: 130px;">
+            <input type="text" id="inputBook" placeholder="문제집 명 (예: 수1)" style="flex: 1; min-width: 110px;">
+            <input type="text" id="inputChapter" placeholder="대단원 (예: 지수함수)" style="flex: 1; min-width: 110px;">
+            <input type="text" id="inputTopic" placeholder="소단원/주제 (예: 지수법칙)" style="flex: 1; min-width: 110px;">
+            <input type="number" id="inputCount" placeholder="문항수" style="width: 70px;" min="1">
             <button onclick="addTopic()">추가</button>
         </div>
 
@@ -124,12 +129,26 @@
 <script>
     let state = {
         dday: JSON.parse(localStorage.getItem('study_dday')) || { title: '', date: '' },
-        books: JSON.parse(localStorage.getItem('study_books')) || []
+        categories: JSON.parse(localStorage.getItem('study_categories')) || []
     };
+
+    // 기존 데이터 호환성 마이그레이션 (기존 books -> categories로 변환)
+    (function migrateData() {
+        const oldBooks = JSON.parse(localStorage.getItem('study_books'));
+        if (oldBooks && oldBooks.length > 0) {
+            state.categories.push({
+                name: '기본 그룹',
+                collapsed: false,
+                books: oldBooks
+            });
+            localStorage.removeItem('study_books');
+            localStorage.setItem('study_categories', JSON.stringify(state.categories));
+        }
+    })();
 
     function saveData() {
         localStorage.setItem('study_dday', JSON.stringify(state.dday));
-        localStorage.setItem('study_books', JSON.stringify(state.books));
+        localStorage.setItem('study_categories', JSON.stringify(state.categories));
         render();
     }
 
@@ -164,21 +183,28 @@
         display.innerText = `${state.dday.title} : ${dDayStr}`;
     }
 
-    /* Book & Problem Logic */
+    /* Logic */
     function addTopic() {
+        let catName = document.getElementById('inputCategory').value.trim() || '기본 그룹';
         const bookName = document.getElementById('inputBook').value.trim();
         const chapterName = document.getElementById('inputChapter').value.trim();
         const topicName = document.getElementById('inputTopic').value.trim();
         const count = parseInt(document.getElementById('inputCount').value);
 
         if (!bookName || !chapterName || !topicName || isNaN(count) || count < 1) {
-            return alert('모든 항목을 입력해주세요.');
+            return alert('문제집, 대단원, 소단원, 문항 수를 바르게 입력해주세요.');
         }
 
-        let book = state.books.find(b => b.name === bookName);
+        let category = state.categories.find(c => c.name === catName);
+        if (!category) {
+            category = { name: catName, collapsed: false, books: [] };
+            state.categories.push(category);
+        }
+
+        let book = category.books.find(b => b.name === bookName);
         if (!book) {
             book = { name: bookName, readCount: 0, collapsed: false, chapters: [] };
-            state.books.push(book);
+            category.books.push(book);
         }
 
         let chapter = book.chapters.find(c => c.name === chapterName);
@@ -196,21 +222,99 @@
         saveData();
     }
 
-    function toggleBookCollapse(bIdx) {
-        state.books[bIdx].collapsed = !state.books[bIdx].collapsed;
+    /* Collapse Toggles */
+    function toggleCategoryCollapse(catIdx) {
+        state.categories[catIdx].collapsed = !state.categories[catIdx].collapsed;
         saveData();
     }
 
-    function toggleProblem(bIdx, cIdx, tIdx, pIdx) {
-        const topic = state.books[bIdx].chapters[cIdx].topics[tIdx];
+    function toggleBookCollapse(catIdx, bIdx) {
+        state.categories[catIdx].books[bIdx].collapsed = !state.categories[catIdx].books[bIdx].collapsed;
+        saveData();
+    }
+
+    /* Move / Reorder (Dropdown) */
+    function moveBook(catIdx, bIdx, targetPos) {
+        targetPos = parseInt(targetPos);
+        const books = state.categories[catIdx].books;
+        const [targetBook] = books.splice(bIdx, 1);
+        books.splice(targetPos, 0, targetBook);
+        saveData();
+    }
+
+    function moveCategory(catIdx, targetPos) {
+        targetPos = parseInt(targetPos);
+        const [targetCat] = state.categories.splice(catIdx, 1);
+        state.categories.splice(targetPos, 0, targetCat);
+        saveData();
+    }
+
+    /* Edit Functions */
+    function editCategory(catIdx) {
+        const cat = state.categories[catIdx];
+        const newName = prompt('카테고리 이름을 수정하세요:', cat.name);
+        if (newName && newName.trim()) {
+            cat.name = newName.trim();
+            saveData();
+        }
+    }
+
+    function editBook(catIdx, bIdx) {
+        const book = state.categories[catIdx].books[bIdx];
+        const newName = prompt('문제집 이름을 수정하세요:', book.name);
+        if (newName && newName.trim()) {
+            book.name = newName.trim();
+            saveData();
+        }
+    }
+
+    function editChapter(catIdx, bIdx, cIdx) {
+        const chapter = state.categories[catIdx].books[bIdx].chapters[cIdx];
+        const newName = prompt('대단원 이름을 수정하세요:', chapter.name);
+        if (newName && newName.trim()) {
+            chapter.name = newName.trim();
+            saveData();
+        }
+    }
+
+    function editTopic(catIdx, bIdx, cIdx, tIdx) {
+        const topic = state.categories[catIdx].books[bIdx].chapters[cIdx].topics[tIdx];
+        const newName = prompt('소단원 이름을 수정하세요:', topic.name);
+        if (!newName || !newName.trim()) return;
+
+        const newCountStr = prompt('문항 수를 수정하세요 (기존 기록 유지):', topic.problems.length);
+        const newCount = parseInt(newCountStr);
+
+        if (isNaN(newCount) || newCount < 1) {
+            alert('올바른 문항 수를 입력해주세요.');
+            return;
+        }
+
+        topic.name = newName.trim();
+        
+        // Adjust array length while keeping old solved statuses
+        if (newCount > topic.problems.length) {
+            const addCount = newCount - topic.problems.length;
+            topic.problems.push(...Array(addCount).fill(false));
+        } else if (newCount < topic.problems.length) {
+            topic.problems = topic.problems.slice(0, newCount);
+        }
+
+        checkCompletions(catIdx, bIdx);
+        saveData();
+    }
+
+    /* Problem Toggle & Completion Check */
+    function toggleProblem(catIdx, bIdx, cIdx, tIdx, pIdx) {
+        const topic = state.categories[catIdx].books[bIdx].chapters[cIdx].topics[tIdx];
         topic.problems[pIdx] = !topic.problems[pIdx];
 
-        checkCompletions(bIdx);
+        checkCompletions(catIdx, bIdx);
         saveData();
     }
 
-    function checkCompletions(bIdx) {
-        const book = state.books[bIdx];
+    function checkCompletions(catIdx, bIdx) {
+        const book = state.categories[catIdx].books[bIdx];
         let totalProblems = 0;
         let solvedProblems = 0;
 
@@ -223,40 +327,48 @@
 
         if (totalProblems > 0 && totalProblems === solvedProblems) {
             book.readCount += 1;
-
             book.chapters.forEach(chapter => {
                 chapter.topics.forEach(topic => {
                     topic.problems = topic.problems.map(() => false);
                 });
             });
-
             alert(`🎉 [${book.name}] 모든 문항을 완료하여 ${book.readCount}회독 달성! 기록이 초기화되어 다음 회독을 시작합니다.`);
         }
     }
 
-    function deleteBook(bIdx) {
-        if (confirm('이 문제집 전체를 삭제하시겠습니까?')) {
-            state.books.splice(bIdx, 1);
+    /* Delete Functions */
+    function deleteCategory(catIdx) {
+        if (confirm(`'${state.categories[catIdx].name}' 카테고리와 내부 모든 문제집을 삭제하시겠습니까?`)) {
+            state.categories.splice(catIdx, 1);
             saveData();
         }
     }
 
-    function deleteTopic(bIdx, cIdx, tIdx) {
+    function deleteBook(catIdx, bIdx) {
+        if (confirm('이 문제집 전체를 삭제하시겠습니까?')) {
+            state.categories[catIdx].books.splice(bIdx, 1);
+            if (state.categories[catIdx].books.length === 0) {
+                // Keep empty category or optionally keep as is
+            }
+            saveData();
+        }
+    }
+
+    function deleteChapter(catIdx, bIdx, cIdx) {
+        if (confirm('이 대단원을 삭제하시겠습니까?')) {
+            const book = state.categories[catIdx].books[bIdx];
+            book.chapters.splice(cIdx, 1);
+            saveData();
+        }
+    }
+
+    function deleteTopic(catIdx, bIdx, cIdx, tIdx) {
         if (confirm('이 소단원을 삭제하시겠습니까?')) {
-            if (!state.books[bIdx] || !state.books[bIdx].chapters[cIdx]) return;
-
-            const book = state.books[bIdx];
+            const book = state.categories[catIdx].books[bIdx];
             const chapter = book.chapters[cIdx];
-
             chapter.topics.splice(tIdx, 1);
 
-            if (chapter.topics.length === 0) {
-                book.chapters.splice(cIdx, 1);
-            }
-            if (book.chapters.length === 0) {
-                state.books.splice(bIdx, 1);
-            }
-
+            if (chapter.topics.length === 0) book.chapters.splice(cIdx, 1);
             saveData();
         }
     }
@@ -267,88 +379,141 @@
         const tree = document.getElementById('bookTree');
         tree.innerHTML = '';
 
-        state.books.forEach((book, bIdx) => {
-            const bookEl = document.createElement('div');
-            bookEl.className = 'book-item';
+        state.categories.forEach((category, catIdx) => {
+            const catEl = document.createElement('div');
+            catEl.className = 'category-item';
 
-            let totalProblems = 0;
-            let solvedProblems = 0;
-            let chaptersHtml = '';
+            const isCatCollapsed = category.collapsed || false;
 
-            book.chapters.forEach((chapter, cIdx) => {
-                let topicsHtml = '';
-                let isChapterDone = chapter.topics.length > 0;
+            // Category Reorder Dropdown Options
+            let catPosOptions = state.categories.map((_, idx) => 
+                `<option value="${idx}" ${idx === catIdx ? 'selected' : ''}>순서: ${idx + 1}번째</option>`
+            ).join('');
 
-                chapter.topics.forEach((topic, tIdx) => {
-                    const topicTotal = topic.problems.length;
-                    const topicSolved = topic.problems.filter(p => p).length;
+            let booksHtml = '';
 
-                    totalProblems += topicTotal;
-                    solvedProblems += topicSolved;
+            category.books.forEach((book, bIdx) => {
+                let totalProblems = 0;
+                let solvedProblems = 0;
+                let chaptersHtml = '';
 
-                    const isTopicDone = topicTotal > 0 && topicTotal === topicSolved;
-                    if (!isTopicDone) isChapterDone = false;
+                book.chapters.forEach((chapter, cIdx) => {
+                    let topicsHtml = '';
+                    let isChapterDone = chapter.topics.length > 0;
 
-                    const gridHtml = topic.problems.map((done, pIdx) => `
-                        <div class="problem-btn ${done ? 'active' : ''}" 
-                             onclick="toggleProblem(${bIdx}, ${cIdx}, ${tIdx}, ${pIdx})">
-                            ${pIdx + 1}
-                        </div>
-                    `).join('');
+                    chapter.topics.forEach((topic, tIdx) => {
+                        const topicTotal = topic.problems.length;
+                        const topicSolved = topic.problems.filter(p => p).length;
 
-                    topicsHtml += `
-                        <div class="topic-item">
-                            <div class="topic-header">
-                                <div>
-                                    <strong>① 주제 ${tIdx + 1}.</strong> ${topic.name}
-                                    ${isTopicDone ? '<span class="badge-done">소단원 완료</span>' : ''}
-                                </div>
-                                <button class="btn-danger" onclick="deleteTopic(${bIdx}, ${cIdx}, ${tIdx})">삭제</button>
+                        totalProblems += topicTotal;
+                        solvedProblems += topicSolved;
+
+                        const isTopicDone = topicTotal > 0 && topicTotal === topicSolved;
+                        if (!isTopicDone) isChapterDone = false;
+
+                        const gridHtml = topic.problems.map((done, pIdx) => `
+                            <div class="problem-btn ${done ? 'active' : ''}" 
+                                 onclick="toggleProblem(${catIdx}, ${bIdx}, ${cIdx}, ${tIdx}, ${pIdx})">
+                                ${pIdx + 1}
                             </div>
-                            <div class="problem-grid">${gridHtml}</div>
+                        `).join('');
+
+                        topicsHtml += `
+                            <div class="topic-item">
+                                <div class="topic-header">
+                                    <div>
+                                        <strong>① 주제 ${tIdx + 1}.</strong> ${topic.name}
+                                        ${isTopicDone ? '<span class="badge-done">소단원 완료</span>' : ''}
+                                    </div>
+                                    <div class="action-group">
+                                        <button class="btn-edit" onclick="editTopic(${catIdx}, ${bIdx}, ${cIdx}, ${tIdx})">수정</button>
+                                        <button class="btn-danger" onclick="deleteTopic(${catIdx}, ${bIdx}, ${cIdx}, ${tIdx})">삭제</button>
+                                    </div>
+                                </div>
+                                <div class="problem-grid">${gridHtml}</div>
+                            </div>
+                        `;
+                    });
+
+                    chaptersHtml += `
+                        <div class="chapter-item">
+                            <div class="chapter-header">
+                                <div>
+                                    <span>(${cIdx + 1}) ${chapter.name}</span>
+                                    ${isChapterDone ? '<span class="badge-done">대단원 완료</span>' : ''}
+                                </div>
+                                <div class="action-group">
+                                    <button class="btn-edit" onclick="editChapter(${catIdx}, ${bIdx}, ${cIdx})">수정</button>
+                                    <button class="btn-danger" onclick="deleteChapter(${catIdx}, ${bIdx}, ${cIdx})">삭제</button>
+                                </div>
+                            </div>
+                            ${topicsHtml}
                         </div>
                     `;
                 });
 
-                chaptersHtml += `
-                    <div class="chapter-item">
-                        <div class="chapter-header">
-                            <span>(${cIdx + 1}) ${chapter.name}</span>
-                            ${isChapterDone ? '<span class="badge-done">대단원 완료</span>' : ''}
+                const percent = totalProblems > 0 ? Math.round((solvedProblems / totalProblems) * 100) : 0;
+                const isBookCollapsed = book.collapsed || false;
+
+                // Book Reorder Dropdown Options
+                let bookPosOptions = category.books.map((_, idx) => 
+                    `<option value="${idx}" ${idx === bIdx ? 'selected' : ''}>순서: ${idx + 1}번째</option>`
+                ).join('');
+
+                booksHtml += `
+                    <div class="book-item">
+                        <div class="book-header">
+                            <div class="book-title-clickable" onclick="toggleBookCollapse(${catIdx}, ${bIdx})">
+                                <span class="toggle-icon">${isBookCollapsed ? '▶' : '▼'}</span>
+                                <span>📖 ${bIdx + 1}) ${book.name}</span>
+                                <span class="read-count">${book.readCount}회독</span>
+                            </div>
+                            <div class="action-group">
+                                <select onchange="moveBook(${catIdx}, ${bIdx}, this.value)">
+                                    ${bookPosOptions}
+                                </select>
+                                <button class="btn-edit" onclick="editBook(${catIdx}, ${bIdx})">수정</button>
+                                <button class="btn-danger" onclick="deleteBook(${catIdx}, ${bIdx})">삭제</button>
+                            </div>
                         </div>
-                        ${topicsHtml}
+
+                        <div style="display: ${isBookCollapsed ? 'none' : 'block'};">
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span>진도율 (${solvedProblems} / ${totalProblems} 문항)</span>
+                                    <span>${percent}%</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                                </div>
+                            </div>
+                            ${chaptersHtml}
+                        </div>
                     </div>
                 `;
             });
 
-            const percent = totalProblems > 0 ? Math.round((solvedProblems / totalProblems) * 100) : 0;
-            const isCollapsed = book.collapsed || false;
-
-            bookEl.innerHTML = `
-                <div class="book-header">
-                    <div class="book-title-clickable" onclick="toggleBookCollapse(${bIdx})">
-                        <span class="toggle-icon">${isCollapsed ? '▶' : '▼'}</span>
-                        <span>${bIdx + 1}) ${book.name}</span>
-                        <span class="read-count">${book.readCount}회독</span>
+            catEl.innerHTML = `
+                <div class="category-header">
+                    <div class="category-title" onclick="toggleCategoryCollapse(${catIdx})">
+                        <span class="toggle-icon">${isCatCollapsed ? '▶' : '▼'}</span>
+                        <span>📁 ${category.name}</span>
                     </div>
-                    <button class="btn-danger" onclick="deleteBook(${bIdx})">책 전체 삭제</button>
+                    <div class="action-group">
+                        <select onchange="moveCategory(${catIdx}, this.value)">
+                            ${catPosOptions}
+                        </select>
+                        <button class="btn-edit" onclick="editCategory(${catIdx})">수정</button>
+                        <button class="btn-danger" onclick="deleteCategory(${catIdx})">카테고리 삭제</button>
+                    </div>
                 </div>
 
-                <div style="display: ${isCollapsed ? 'none' : 'block'};">
-                    <div class="progress-container">
-                        <div class="progress-info">
-                            <span>진도율 (${solvedProblems} / ${totalProblems} 문항)</span>
-                            <span>${percent}%</span>
-                        </div>
-                        <div class="progress-bar-bg">
-                            <div class="progress-bar-fill" style="width: ${percent}%;"></div>
-                        </div>
-                    </div>
-
-                    ${chaptersHtml}
+                <div style="display: ${isCatCollapsed ? 'none' : 'block'};">
+                    ${booksHtml.length > 0 ? booksHtml : '<div style="color: var(--text-sub); font-size: 0.85rem; padding: 10px 0;">문제집이 없습니다. 새로 추가해 보세요!</div>'}
                 </div>
             `;
-            tree.appendChild(bookEl);
+
+            tree.appendChild(catEl);
         });
     }
 
